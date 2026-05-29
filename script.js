@@ -8,6 +8,7 @@ class CalendarApp {
         this.today = new Date();
         this.editingDate = null;
         this.todos = this.loadTodos();
+        this.deleteHoldTimer = null;
         
         // DOM Elements
         this.monthYearEl = document.getElementById('monthYear');
@@ -50,10 +51,55 @@ class CalendarApp {
         
         this.cancelBtn.addEventListener('click', () => this.closeModal());
         this.saveBtn.addEventListener('click', (e) => this.saveTodo(e));
-        this.deleteBtn.addEventListener('click', () => this.deleteTodo());
+        
+        // Delete button with tap-and-hold
+        this.deleteBtn.addEventListener('mousedown', () => this.startDeleteHold());
+        this.deleteBtn.addEventListener('mouseup', () => this.endDeleteHold());
+        this.deleteBtn.addEventListener('mouseleave', () => this.endDeleteHold());
+        this.deleteBtn.addEventListener('touchstart', () => this.startDeleteHold());
+        this.deleteBtn.addEventListener('touchend', () => this.endDeleteHold());
+        
         this.modalOverlay.addEventListener('click', () => this.closeModal());
         
         this.todoInput.addEventListener('input', () => this.updateSaveButtonState());
+    }
+
+    // ==========================================
+    // Delete Button Tap-and-Hold
+    // ==========================================
+
+    startDeleteHold() {
+        const holdDuration = 1000; // 1 second
+        const deleteProgress = this.deleteBtn.querySelector('.delete-progress');
+        let elapsed = 0;
+        const step = 50; // Update every 50ms
+
+        this.deleteBtn.classList.add('holding');
+
+        this.deleteHoldTimer = setInterval(() => {
+            elapsed += step;
+            const progress = Math.min((elapsed / holdDuration) * 100, 100);
+            deleteProgress.style.width = progress + '%';
+
+            if (elapsed >= holdDuration) {
+                clearInterval(this.deleteHoldTimer);
+                this.deleteBtn.classList.remove('holding');
+                this.deleteBtn.classList.add('held');
+                setTimeout(() => {
+                    this.deleteTodo();
+                    this.deleteBtn.classList.remove('held');
+                }, 300);
+            }
+        }, step);
+    }
+
+    endDeleteHold() {
+        if (this.deleteHoldTimer) {
+            clearInterval(this.deleteHoldTimer);
+            this.deleteBtn.classList.remove('holding');
+            const deleteProgress = this.deleteBtn.querySelector('.delete-progress');
+            deleteProgress.style.width = '0%';
+        }
     }
 
     // ==========================================
@@ -129,8 +175,8 @@ class CalendarApp {
             cell.classList.add('today');
         }
 
-        // Mark as past date
-        if (this.isPastDate(actualDate)) {
+        // Mark as past date (only for dates in current month, not other months)
+        if (this.isPastDate(actualDate) && !isOtherMonth) {
             cell.classList.add('past-date');
         }
 
@@ -307,6 +353,7 @@ class CalendarApp {
         this.todoInput.value = '';
         this.editingDate = null;
         document.body.style.overflow = '';
+        this.endDeleteHold();
     }
 
     formatDateForModal(date) {
@@ -347,14 +394,11 @@ class CalendarApp {
     deleteTodo() {
         if (!this.editingDate) return;
 
-        const confirmed = confirm('Are you sure you want to delete this to-do?');
-        if (confirmed) {
-            const dateKey = this.getDateKey(this.editingDate);
-            delete this.todos[dateKey];
-            this.saveTodosToLocalStorage();
-            this.closeModal();
-            this.renderCalendar();
-        }
+        const dateKey = this.getDateKey(this.editingDate);
+        delete this.todos[dateKey];
+        this.saveTodosToLocalStorage();
+        this.closeModal();
+        this.renderCalendar();
     }
 
     // ==========================================

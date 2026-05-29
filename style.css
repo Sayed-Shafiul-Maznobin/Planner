@@ -194,7 +194,7 @@ body {
 .weekday-header {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
+    gap: 12px;
     margin-bottom: 12px;
 }
 
@@ -212,7 +212,7 @@ body {
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
+    gap: 12px;
 }
 
 /* Date Cell */
@@ -265,12 +265,7 @@ body {
     animation: blink 0.6s ease-in-out 3;
 }
 
-/* Strike-through for past dates */
-.date-cell.past-date .date-number {
-    text-decoration: line-through;
-    color: #9ca3af;
-}
-
+/* Strike-through ONLY for todo text of past dates (NOT the date number) */
 .date-cell.past-date .todo-text {
     text-decoration: line-through;
     color: #d1d5db;
@@ -409,6 +404,8 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-primary {
@@ -451,6 +448,7 @@ body {
     background-color: var(--danger-color);
     color: white;
     box-shadow: var(--shadow-sm);
+    position: relative;
 }
 
 .btn-danger:hover {
@@ -464,6 +462,40 @@ body {
 
 .btn-delete {
     margin-left: auto;
+}
+
+/* Delete Button Hold Effect */
+.delete-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 0%;
+    transition: width 0.05s linear;
+    border-radius: 2px;
+}
+
+.btn-delete.holding {
+    background-color: #dc2626;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+.btn-delete.held {
+    background-color: #b91c1c;
+    animation: pulse 0.3s ease-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 /* Responsive Design */
@@ -498,6 +530,15 @@ body {
 
     .calendar-container {
         padding: 16px;
+    }
+
+    .weekday-header {
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .calendar-grid {
+        gap: 8px;
     }
 
     .date-cell {
@@ -577,8 +618,8 @@ body {
     }
 
     .weekday-header {
-        gap: 4px;
-        margin-bottom: 8px;
+        gap: 6px;
+        margin-bottom: 6px;
     }
 
     .weekday {
@@ -587,7 +628,7 @@ body {
     }
 
     .calendar-grid {
-        gap: 4px;
+        gap: 6px;
     }
 
     .date-cell {
