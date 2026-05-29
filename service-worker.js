@@ -1,9 +1,9 @@
 const CACHE_NAME = 'calendar-app-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/script.js'
+  '/Planner/',
+  '/Planner/index.html',
+  '/Planner/style.css',
+  '/Planner/script.js'
 ];
 
 // Install event - cache files
