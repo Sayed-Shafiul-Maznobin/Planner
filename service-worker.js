@@ -1,10 +1,18 @@
 const CACHE_NAME = 'calendar-app-v1';
+   
+
+
+
+
 const urlsToCache = [
   '/Planner/',
   '/Planner/index.html',
   '/Planner/style.css',
   '/Planner/script.js'
 ];
+
+
+
 
 // Install event - cache files
 self.addEventListener('install', event => {

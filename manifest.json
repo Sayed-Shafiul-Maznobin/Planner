@@ -2,7 +2,7 @@
   "name": "Calendar App",
   "short_name": "Calendar",
   "description": "A minimalist offline calendar with to-do notes",
-  "start_url": "/",
+  "start_url": "/Planner/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
