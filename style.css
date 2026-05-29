@@ -135,19 +135,6 @@ body {
     transform: scale(0.98);
 }
 
-/* Blinking animation for today button */
-@keyframes blink {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.6;
-    }
-}
-
-.btn-today.blinking {
-    animation: blink 0.6s ease-in-out 3;
-}
 
 /* Date Jump Navigation */
 .date-jump {
